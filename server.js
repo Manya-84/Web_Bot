@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // Importamos los módulos necesarios.
 const http = require('http');
 const fs = require('fs');
@@ -6,7 +8,7 @@ const OpenAI = require('openai').default;
 
 // Instancia de OpenAI con la API key.
 const openai = new OpenAI({
-  apiKey: 'la_api_key_de_tu_cuenta'
+  apiKey: process.env.OPENAI_API_KEY
 });
 
 let activeThreadId = null;
