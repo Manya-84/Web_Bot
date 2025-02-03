@@ -1,0 +1,98 @@
+<!-- Definición del tipo de documento HTML -->
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Configuración de la codificación de caracteres -->
+  <meta charset="UTF-8" />
+  <!-- Título del documento que aparece en la pestaña del navegador -->
+  <title>Chat Simple</title>
+  <!-- Sección de estilos en línea para el diseño del chat -->
+  <style>
+    /* Contenedor principal del chat con bordes, tamaño fijo y desplazamiento vertical */
+    #chat-container {
+      border: 1px solid #ccc;
+      width: 300px;
+      height: 200px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+    /* Propiedad de margen para cada mensaje en el chat */
+    .message {
+      margin: 5px 0;
+    }
+    /* Color especial para mensajes del sistema */
+    .system {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <!-- Título principal de la página -->
+  <h1>Chat Simple</h1>
+  <!-- Contenedor donde se mostrarán los mensajes -->
+  <div id="chat-container"></div>
+  <!-- Campo de texto para escribir el mensaje -->
+  <input type="text" id="userInput" placeholder="Escribe un mensaje..." />
+  <!-- Botón para enviar el mensaje -->
+  <button id="sendBtn">Enviar</button>
+
+  <script>
+    // Referencia al contenedor del chat
+    const chatContainer = document.getElementById('chat-container');
+    // Referencia al campo de texto donde se ingresa el mensaje
+    const userInput = document.getElementById('userInput');
+    // Referencia al botón que enviará el mensaje
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Función para crear y añadir un nuevo mensaje al contenedor
+    function addMessage(text, isSystem = false) {
+      // Se crea un nuevo elemento 'div' para el mensaje
+      const div = document.createElement('div');
+      // Se asigna la clase CSS correspondiente al tipo de mensaje
+      div.className = 'message' + (isSystem ? ' system' : '');
+      // Se asigna el texto al 'div'
+      div.textContent = text;
+      // Se añade el 'div' con el mensaje al contenedor del chat
+      chatContainer.appendChild(div);
+      // Desplazamos el contenedor hacia el final para mostrar el último mensaje
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Función que envía el mensaje del usuario a la API de OpenAI
+    function sendMessage() {
+      // Se obtiene el texto del campo de entrada y se elimina espacio en blanco
+      const text = userInput.value.trim();
+      // Si hay texto, se agrega el mensaje y luego se genera una respuesta automática
+      if (text) {
+        addMessage(text);
+        userInput.value = '';
+        fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: text })
+        })
+        .then(response => response.json())
+        .then(data => {
+          addMessage('Respuesta del sistema: ' + data.reply, true);
+        })
+        .catch(error => {
+          addMessage('Error al comunicarse con el servidor', true);
+          console.error('Error:', error);
+        });
+      }
+    }
+
+    // Evento para enviar mensaje cuando se hace clic en el botón
+    sendBtn.addEventListener('click', sendMessage);
+    // Evento para enviar mensaje al presionar Enter dentro del campo de texto
+    userInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
