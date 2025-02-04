@@ -5,7 +5,7 @@
   <!-- Configuración de la codificación de caracteres -->
   <meta charset="UTF-8" />
   <!-- Título del documento que aparece en la pestaña del navegador -->
-  <title>Chat Simple</title>
+  <title>ChatBot</title>
   <!-- Sección de estilos en línea para el diseño del chat -->
   <style>
     /* Contenedor principal del chat con nueva estética */
@@ -105,7 +105,6 @@
         
         // Deshabilitar tanto el botón como el campo de entrada para impedir nuevos envíos
         sendBtn.disabled = true;
-        userInput.disabled = true;
         sendBtn.textContent = 'Enviando...';
 
         fetch('/api/chat', {
@@ -119,12 +118,11 @@
         })
         .catch(error => {
           addMessage('Error al comunicarse con el servidor', true);
-          console.error('Error:', error);
+          console.error(error); // Agregado para mostrar el error en la consola
         })
         .finally(() => {
           // Rehabilitar el botón y el campo de entrada
           sendBtn.disabled = false;
-          userInput.disabled = false;
           sendBtn.textContent = 'Enviar';
         });
       }
