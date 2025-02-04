@@ -8,28 +8,66 @@
   <title>Chat Simple</title>
   <!-- Sección de estilos en línea para el diseño del chat -->
   <style>
-    /* Contenedor principal del chat con bordes, tamaño fijo y desplazamiento vertical */
+    /* Contenedor principal del chat con nueva estética */
     #chat-container {
-      border: 1px solid #ccc;
-      width: 300px;
-      height: 200px;
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      width: 350px;
+      height: 300px;
       overflow-y: auto;
       margin-bottom: 10px;
-      padding: 5px;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
     }
-    /* Propiedad de margen para cada mensaje en el chat */
+    /* Estilo base para cada mensaje */
     .message {
-      margin: 5px 0;
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 18px;
+      max-width: 80%;
+      word-wrap: break-word;
+      display: inline-block;
     }
-    /* Color especial para mensajes del sistema */
-    .system {
-      color: green;
+    /* Mensajes enviados por el usuario */
+    .user {
+      background: #0084ff;
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+    /* Mensajes del chatbot */
+    .assistant {
+      background: #e5e5ea;
+      color: #000;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+    /* Opcional: estilos para el input y botón */
+    #userInput {
+      width: 260px;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    #sendBtn {
+      padding: 8px 12px;
+      border: none;
+      background: #0084ff;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #sendBtn:hover {
+      background: #006bbf;
     }
   </style>
 </head>
 <body>
   <!-- Título principal de la página -->
-  <h1>Chat Simple</h1>
+  <h1>ChatBot</h1>
   <!-- Contenedor donde se mostrarán los mensajes -->
   <div id="chat-container"></div>
   <!-- Campo de texto para escribir el mensaje -->
@@ -45,42 +83,49 @@
     // Referencia al botón que enviará el mensaje
     const sendBtn = document.getElementById('sendBtn');
 
-    // Función para crear y añadir un nuevo mensaje al contenedor
-    function addMessage(text, isSystem = false) {
-      // Se crea un nuevo elemento 'div' para el mensaje
+    // Función para crear y añadir un nuevo mensaje al contenedor.
+    // Si isAssistant es true, se aplica el estilo del chatbot.
+    function addMessage(text, isAssistant = false) {
       const div = document.createElement('div');
-      // Se asigna la clase CSS correspondiente al tipo de mensaje
-      div.className = 'message' + (isSystem ? ' system' : '');
-      // Se asigna el texto al 'div'
+      div.className = 'message ' + (isAssistant ? 'assistant' : 'user');
       div.textContent = text;
-      // Se añade el 'div' con el mensaje al contenedor del chat
       chatContainer.appendChild(div);
-      // Desplazamos el contenedor hacia el final para mostrar el último mensaje
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Función que envía el mensaje del usuario a la API de OpenAI
+    // Función que envía el mensaje del usuario y procesa la respuesta.
     function sendMessage() {
-      // Se obtiene el texto del campo de entrada y se elimina espacio en blanco
+      // Si el botón o el campo ya están deshabilitados, no se procesa el envío.
+      if (sendBtn.disabled) return;
+
       const text = userInput.value.trim();
-      // Si hay texto, se agrega el mensaje y luego se genera una respuesta automática
       if (text) {
-        addMessage(text);
+        addMessage(text); // Agrega el mensaje del usuario
         userInput.value = '';
+        
+        // Deshabilitar tanto el botón como el campo de entrada para impedir nuevos envíos
+        sendBtn.disabled = true;
+        userInput.disabled = true;
+        sendBtn.textContent = 'Enviando...';
+
         fetch('/api/chat', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: text })
         })
         .then(response => response.json())
         .then(data => {
-          addMessage('Respuesta del sistema: ' + data.reply, true);
+          addMessage(data.reply, true); // Publica el mensaje del asistente
         })
         .catch(error => {
           addMessage('Error al comunicarse con el servidor', true);
           console.error('Error:', error);
+        })
+        .finally(() => {
+          // Rehabilitar el botón y el campo de entrada
+          sendBtn.disabled = false;
+          userInput.disabled = false;
+          sendBtn.textContent = 'Enviar';
         });
       }
     }
