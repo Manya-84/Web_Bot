@@ -94,7 +94,8 @@ const server = http.createServer((req, res) => {
   }
 });
 
-// Iniciamos el servidor en el puerto 3000.
-server.listen(3000, () => {
-  console.log('Servidor corriendo en http://localhost:3000');
+// Iniciamos el servidor en el puerto 8080 y dirección 0.0.0.0.
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor corriendo en http://0.0.0.0:${PORT}`);
 });
