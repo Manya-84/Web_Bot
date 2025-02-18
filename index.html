@@ -16,16 +16,18 @@
     body,html{
 			height: 100%;
 			margin: 0;
-			background: #7F7FD5;
-	    background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
-	    background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5);
+			background: #22653f;
+      background-image: linear-gradient(to right top, #22653f, #247448, #268451, #27945a, #28a563, #3bb16f, #4cbd7b, #5cc988, #79d39a, #93dcad, #ace6bf, #c4efd2);
+      background-image: -webkit-linear-gradient(to right top, #22653f, #247448, #268451, #27945a, #28a563, #3bb16f, #4cbd7b, #5cc988, #79d39a, #93dcad, #ace6bf, #c4efd2);
+	    /* background: -webkit-linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); */
+	    /* background: linear-gradient(to right, #91EAE4, #86A8E7, #7F7FD5); */
 		}
 		.chat{
 			margin-top: auto;
 			margin-bottom: auto;
 		}
 		.card{
-			height: 600px; /* altura en desktop */
+			height: calc(100vh - 40px); /* para notebooks */
 			border-radius: 15px !important;
 			background-color: rgba(0,0,0,0.4) !important;
 		}
@@ -163,7 +165,7 @@
       margin-bottom: auto;
       margin-left: 10px;
       border-radius: 0 15px 15px 15px;
-      background-color: #82ccdd;
+      background-color: #c4efd2;
       padding: 10px;
       position: relative;
     }
@@ -243,7 +245,7 @@
         margin-top: 15px !important;
       }
       .card{
-			  height: 600px;  /* altura en moviles */
+			  height: calc(100vh - 120px);  /* altura reducida para móviles */
 		  }
     }
     .justify-content-start .msg_container:before {
@@ -254,7 +256,7 @@
       border: 18px solid transparent;
       border-top-width: 0;
       left: -28px;
-      border-right-color: #82ccdd;
+      border-right-color: #c4efd2;
       border-right-width: 16px;
     }
     .justify-content-end .msg_container_send:after {
@@ -290,25 +292,6 @@
 							
 						</div>
 						<div id="chat-container" class="card-body msg_card_body">
-
-							<!--<div class="d-flex justify-content-start mb-4">
-								<div class="img_cont_msg">
-									<img src="https://img.logoipsum.com/355.svg" class="rounded-circle user_img_msg">
-								</div>
-								<div class="msg_container">
-									Hola, como estás?
-								</div>
-							</div>
-              
-							<div class="d-flex justify-content-end mb-4">
-								<div class="msg_container_send">
-									Estoy bien y tú?
-								</div>
-								<div class="img_cont_msg">
-							    <img src="https://i.ibb.co/jvf5rMrP/user-avatar-1-256x255.png" class="rounded-circle user_img_msg">
-								</div>
-							</div>-->
-						
             </div>
 						<div class="card-footer">
 							<div class="input-group">
